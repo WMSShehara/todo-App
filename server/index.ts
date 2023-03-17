@@ -23,7 +23,7 @@ app.get('/', (req: Request, res: Response) => {
 
 app.post('/new', (req: Request, res: Response) => {
     const pool = openDb()
-    pool.query('insert into task (description) values ($1)',
+    pool.query('insert into task (description) values ($1) returning *',
      [req.body.description],
       (error:Error, result: QueryResult) => {
         if (error) {

@@ -1,8 +1,9 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "module": "commonjs",
+        "module": "CommonJS",
         "rootDir": "ts",
         "outDir": "js",
-    }
+    },
+    "exclude": ["server/*.ts"]
 }
