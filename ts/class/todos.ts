@@ -38,6 +38,20 @@ class Todos {
             }
         })
     }
+    removeTask = (id: number) => {
+        return new Promise(async(resolve, reject) => {
+            fetch(this.#backend_url + '/delete/' + id, {
+                method: 'DELETE',
+            })
+            .then(response => response.json())
+            .then((response) => {
+                this.#removeFromArray(id);
+                resolve(response.id);
+            }, (error) => {
+                reject(error);
+            })
+        })
+    }
     #readJson(tasksAsJson: any):void {
         tasksAsJson.forEach((node) => {
             const task = new Task(node.id, node.description);
@@ -48,6 +62,10 @@ class Todos {
         const task = new Task(id, text);
         this.tasks.push(task);
         return task;
+    }
+    #removeFromArray(id: number):void{
+        const arrayWithoutRemoved = this.tasks.filter((task) => task.id !== id);
+        this.tasks=arrayWithoutRemoved;
     }
 }
 export {Todos};

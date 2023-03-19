@@ -18,7 +18,7 @@ var __classPrivateFieldGet = (this && this.__classPrivateFieldGet) || function (
     if (typeof state === "function" ? receiver !== state || !f : !state.has(receiver)) throw new TypeError("Cannot read private member from an object whose class did not declare it");
     return kind === "m" ? f : kind === "a" ? f.call(receiver) : f ? f.value : state.get(receiver);
 };
-var _Todos_instances, _Todos_backend_url, _Todos_readJson, _Todos_addToArray;
+var _Todos_instances, _Todos_backend_url, _Todos_readJson, _Todos_addToArray, _Todos_removeFromArray;
 import { Task } from "./task.js";
 class Todos {
     constructor(url) {
@@ -55,6 +55,20 @@ class Todos {
                 };
             }));
         });
+        this.removeTask = (id) => {
+            return new Promise((resolve, reject) => __awaiter(this, void 0, void 0, function* () {
+                fetch(__classPrivateFieldGet(this, _Todos_backend_url, "f") + '/delete/' + id, {
+                    method: 'DELETE',
+                })
+                    .then(response => response.json())
+                    .then((response) => {
+                    __classPrivateFieldGet(this, _Todos_instances, "m", _Todos_removeFromArray).call(this, id);
+                    resolve(response.id);
+                }, (error) => {
+                    reject(error);
+                });
+            }));
+        };
         __classPrivateFieldSet(this, _Todos_backend_url, url, "f");
     }
 }
@@ -67,5 +81,8 @@ _Todos_backend_url = new WeakMap(), _Todos_instances = new WeakSet(), _Todos_rea
     const task = new Task(id, text);
     this.tasks.push(task);
     return task;
+}, _Todos_removeFromArray = function _Todos_removeFromArray(id) {
+    const arrayWithoutRemoved = this.tasks.filter((task) => task.id !== id);
+    this.tasks = arrayWithoutRemoved;
 };
 export { Todos };

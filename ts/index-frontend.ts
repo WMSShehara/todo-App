@@ -54,9 +54,32 @@ input.addEventListener('keypress', event => {
   const renderTask =(task : Task) => {
     const list_element = document.createElement('li');
     list_element.setAttribute('class', 'list-group-item');
-    list_element.innerHTML = task.text;
+    list_element.setAttribute('data-key', task.id.toString());
+    // list_element.innerHTML = task.text;
+    renderSpan(list_element, task.text);
+    renderLink(list_element, task.id);
     list.append(list_element);
   }
+  const renderSpan = (list_element: HTMLLIElement, text: string) => {
+    const span = list_element.appendChild(document.createElement('span'));
+    span.innerHTML = text;
+  }
+  const renderLink = (list_element: HTMLLIElement, id:number) => {
+    const link = list_element.appendChild(document.createElement('a'));
+    link.innerHTML = '<i class = "bi bi-trash-fill"></i>';
+    link.setAttribute('style', 'float: right');
+    link.addEventListener('click', (event) => {
+      todos.removeTask(id).then((id) => {
+        const elementToremove: HTMLLIElement = document.querySelector(`[data-key="${id}"]`);
+        if(elementToremove) {
+          list.removeChild(elementToremove);
+        }
+      }).catch(error => {
+        alert(error);
+  })
+})
+  }
+  
 });
 
 function domReady(cb: Function): void {

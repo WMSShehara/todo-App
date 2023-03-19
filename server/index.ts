@@ -5,6 +5,7 @@ import {Pool, QueryResult} from 'pg'
 const app: Express = express()
 app.use(cors())
 app.use(express.json())
+app.use(express.urlencoded({extended: true}))
 
 const port = 3001
 
@@ -30,6 +31,19 @@ app.post('/new', (req: Request, res: Response) => {
             res.status(500).json({error: error.message})
         }
         res.status(200).json({id: result.rows[0].id})
+    })
+})
+
+app.delete("/delete/:id",async (req: Request, res: Response) => {
+    const pool = openDb()
+    const id = parseInt(req.params.id)
+    pool.query('delete from task where id = $1', 
+    [id], 
+    (error:Error, result: QueryResult) => {
+        if (error) {
+            res.status(500).json({error: error.message})
+        }
+        res.status(200).json({id:id})
     })
 })
 
